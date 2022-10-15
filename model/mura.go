@@ -1,6 +1,6 @@
 package model
 
-type Mura map[int]map[MuraState]int
+type Mura []map[MuraState]int
 
 type MuraState struct {
 	State  int

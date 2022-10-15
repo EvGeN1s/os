@@ -1,19 +1,12 @@
 package util
 
-import "os/model"
+import (
+	"os/model"
+)
 
-func ContainsMuraState(s []model.MuraState, e model.MuraState) bool {
+func ContainsState(s []model.MilliState, e model.MilliState) bool {
 	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
-
-func ContainsMilliState(s []model.MilliState, e model.MilliState) bool {
-	for _, a := range s {
-		if a == e {
+		if a.State == e.State && a.Signal == e.Signal {
 			return true
 		}
 	}

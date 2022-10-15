@@ -49,7 +49,7 @@ func ConvertFromTableToMilli(records [][]string) model.Milli {
 }
 
 func ConvertFromTableToMura(records [][]string) model.Mura {
-	result := make(model.Mura, len(records)-1, len(records)-1)
+	result := make(model.Mura, len(records)-2, len(records)-2)
 
 	signals := make([]int, 0, len(records[0])-1)
 	for i, sign := range records[0] {
@@ -68,10 +68,10 @@ func ConvertFromTableToMura(records [][]string) model.Mura {
 	}
 
 	for i, rows := range records {
-		if i == 0 {
+		if i < 2 {
 			continue
 		}
-		move := i - 1
+		move := i - 2
 		for j, column := range rows {
 			if j == 0 {
 				continue
@@ -81,6 +81,10 @@ func ConvertFromTableToMura(records [][]string) model.Mura {
 			muraState := model.MuraState{
 				State:  states[j-1],
 				Signal: signals[j-1],
+			}
+
+			if result[move] == nil {
+				result[move] = make(map[model.MuraState]int)
 			}
 
 			result[move][muraState] = state

@@ -29,7 +29,7 @@ func MilliToMure(milli model.Milli) model.Mura {
 }
 
 func MuraToMilli(mura model.Mura) model.Milli {
-	result := model.Milli{}
+	result := make(model.Milli, len(mura), len(mura))
 
 	statesToSign := make(map[int]int)
 	for _, states := range mura {
@@ -43,6 +43,9 @@ func MuraToMilli(mura model.Mura) model.Milli {
 			milliState := model.MilliState{
 				State:  state,
 				Signal: statesToSign[state],
+			}
+			if result[move] == nil {
+				result[move] = make(map[int]model.MilliState)
 			}
 
 			result[move][inState.State] = milliState

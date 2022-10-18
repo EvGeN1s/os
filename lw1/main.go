@@ -2,16 +2,16 @@ package main
 
 import (
 	"os"
-	"os/convert"
-	"os/parse"
-	"os/util"
+	convert2 "os/lw1/convert"
+	parse2 "os/lw1/parse"
+	util2 "os/lw1/util"
 )
 
 const milliToMure = "mealy-to-moore"
 const mureToMilli = "moore-to-mealy"
 
 func main() {
-	records := util.ReadCSV(os.Args[2])
+	records := util2.ReadCSV(os.Args[2])
 
 	var out [][]string
 	switch os.Args[1] {
@@ -24,17 +24,17 @@ func main() {
 		panic("undefiend arg")
 	}
 
-	util.WriteCSV(os.Args[3], out)
+	util2.WriteCSV(os.Args[3], out)
 }
 
 func convertMilli(records [][]string) [][]string {
-	in := parse.ConvertFromTableToMilli(records)
-	out := convert.MilliToMure(in)
-	return parse.ConvertFromMuraToTable(out)
+	in := parse2.ConvertFromTableToMilli(records)
+	out := convert2.MilliToMure(in)
+	return parse2.ConvertFromMuraToTable(out)
 }
 
 func convertMure(records [][]string) [][]string {
-	in := parse.ConvertFromTableToMura(records)
-	out := convert.MuraToMilli(in)
-	return parse.ConvertFromMilliToTable(out)
+	in := parse2.ConvertFromTableToMura(records)
+	out := convert2.MuraToMilli(in)
+	return parse2.ConvertFromMilliToTable(out)
 }

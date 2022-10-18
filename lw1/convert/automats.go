@@ -1,12 +1,12 @@
 package convert
 
 import (
-	"os/model"
-	"os/util"
+	model2 "os/lw1/model"
+	util2 "os/lw1/util"
 )
 
-func MilliToMure(milli model.Milli) model.Mura {
-	result := make(model.Mura, len(milli), len(milli))
+func MilliToMure(milli model2.Milli) model2.Mura {
+	result := make(model2.Mura, len(milli), len(milli))
 
 	newStates, muraToMilliState, milliToMuraState := findCommonMuraState(milli)
 
@@ -15,7 +15,7 @@ func MilliToMure(milli model.Milli) model.Mura {
 
 		for move, states := range milli {
 			if result[move] == nil {
-				result[move] = make(map[model.MuraState]int)
+				result[move] = make(map[model2.MuraState]int)
 			}
 
 			moveState := states[milliState.State]
@@ -28,8 +28,8 @@ func MilliToMure(milli model.Milli) model.Mura {
 	return result
 }
 
-func MuraToMilli(mura model.Mura) model.Milli {
-	result := make(model.Milli, len(mura), len(mura))
+func MuraToMilli(mura model2.Mura) model2.Milli {
+	result := make(model2.Milli, len(mura), len(mura))
 
 	statesToSign := make(map[int]int)
 	for _, states := range mura {
@@ -40,12 +40,12 @@ func MuraToMilli(mura model.Mura) model.Milli {
 
 	for move, states := range mura {
 		for inState, state := range states {
-			milliState := model.MilliState{
+			milliState := model2.MilliState{
 				State:  state,
 				Signal: statesToSign[state],
 			}
 			if result[move] == nil {
-				result[move] = make(map[int]model.MilliState)
+				result[move] = make(map[int]model2.MilliState)
 			}
 
 			result[move][inState.State] = milliState
@@ -55,20 +55,20 @@ func MuraToMilli(mura model.Mura) model.Milli {
 	return result
 }
 
-func findCommonMuraState(milli model.Milli) ([]model.MuraState, map[int]model.MilliState, map[model.MilliState]int) {
-	var result []model.MuraState
-	var uniqStates []model.MilliState
-	muraToMilliMap := make(map[int]model.MilliState)
-	milliToMuraMap := make(map[model.MilliState]int)
+func findCommonMuraState(milli model2.Milli) ([]model2.MuraState, map[int]model2.MilliState, map[model2.MilliState]int) {
+	var result []model2.MuraState
+	var uniqStates []model2.MilliState
+	muraToMilliMap := make(map[int]model2.MilliState)
+	milliToMuraMap := make(map[model2.MilliState]int)
 	statesCount := 0
 	for _, states := range milli {
 		for _, state := range states {
-			newState := model.MuraState{
+			newState := model2.MuraState{
 				State:  statesCount,
 				Signal: state.Signal,
 			}
 
-			if !util.ContainsState(uniqStates, state) {
+			if !util2.ContainsState(uniqStates, state) {
 				uniqStates = append(uniqStates, state)
 
 				result = append(result, newState)

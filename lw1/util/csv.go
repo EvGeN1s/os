@@ -25,7 +25,6 @@ func ReadCSV(filePath string) [][]string {
 }
 
 func WriteCSV(filePath string, data [][]string) {
-	_ = os.Remove(filePath)
 	f, err := os.Create(filePath)
 	if err != nil {
 		log.Fatal("Unable to read input file "+filePath, err)

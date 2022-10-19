@@ -2,9 +2,10 @@ package parse
 
 import (
 	"fmt"
-	model2 "os/lw1/model"
-	util2 "os/lw1/util"
 	"strings"
+
+	"os/lw1/model"
+	"os/lw1/util"
 )
 
 const (
@@ -15,8 +16,8 @@ const (
 	SignalChar = "y"
 )
 
-func ConvertFromTableToMilli(records [][]string) model2.Milli {
-	result := make(model2.Milli, len(records)-1, len(records)-1)
+func ConvertFromTableToMilli(records [][]string) model.Milli {
+	result := make(model.Milli, len(records)-1, len(records)-1)
 
 	states := make([]int, 0, len(records[0])-1)
 
@@ -24,7 +25,7 @@ func ConvertFromTableToMilli(records [][]string) model2.Milli {
 		if i == 0 {
 			continue
 		}
-		states = append(states, util2.StringToInt(state))
+		states = append(states, util.StringToInt(state))
 	}
 
 	for i, rows := range records {
@@ -38,7 +39,7 @@ func ConvertFromTableToMilli(records [][]string) model2.Milli {
 			}
 			state := convertStringToState(column)
 			if result[move] == nil {
-				result[move] = make(map[int]model2.MilliState)
+				result[move] = make(map[int]model.MilliState)
 			}
 
 			result[move][states[j-1]] = state
@@ -48,15 +49,15 @@ func ConvertFromTableToMilli(records [][]string) model2.Milli {
 	return result
 }
 
-func ConvertFromTableToMura(records [][]string) model2.Mura {
-	result := make(model2.Mura, len(records)-2, len(records)-2)
+func ConvertFromTableToMura(records [][]string) model.Mura {
+	result := make(model.Mura, len(records)-2, len(records)-2)
 
 	signals := make([]int, 0, len(records[0])-1)
 	for i, sign := range records[0] {
 		if i == 0 {
 			continue
 		}
-		signals = append(signals, util2.StringToInt(sign))
+		signals = append(signals, util.StringToInt(sign))
 	}
 
 	states := make([]int, 0, len(records[0])-1)
@@ -64,7 +65,7 @@ func ConvertFromTableToMura(records [][]string) model2.Mura {
 		if i == 0 {
 			continue
 		}
-		states = append(states, util2.StringToInt(state))
+		states = append(states, util.StringToInt(state))
 	}
 
 	for i, rows := range records {
@@ -76,15 +77,15 @@ func ConvertFromTableToMura(records [][]string) model2.Mura {
 			if j == 0 {
 				continue
 			}
-			state := util2.StringToInt(column)
+			state := util.StringToInt(column)
 
-			muraState := model2.MuraState{
+			muraState := model.MuraState{
 				State:  states[j-1],
 				Signal: signals[j-1],
 			}
 
 			if result[move] == nil {
-				result[move] = make(map[model2.MuraState]int)
+				result[move] = make(map[model.MuraState]int)
 			}
 
 			result[move][muraState] = state
@@ -94,13 +95,13 @@ func ConvertFromTableToMura(records [][]string) model2.Mura {
 	return result
 }
 
-func ConvertFromMuraToTable(mura model2.Mura) [][]string {
+func ConvertFromMuraToTable(mura model.Mura) [][]string {
 	var result [][]string
 	signals := make([]string, 0)
 	signals = append(signals, "")
 	states := make([]string, 0)
 	states = append(states, "")
-	intState := make([]model2.MuraState, 0)
+	intState := make([]model.MuraState, 0)
 	for _, muraSates := range mura {
 		for muraState := range muraSates {
 			signals = append(signals, fmt.Sprintf("%s%d", SignalChar, muraState.Signal))
@@ -126,7 +127,7 @@ func ConvertFromMuraToTable(mura model2.Mura) [][]string {
 	return result
 }
 
-func ConvertFromMilliToTable(milli model2.Milli) [][]string {
+func ConvertFromMilliToTable(milli model.Milli) [][]string {
 	var result [][]string
 	states := make([]string, 0)
 	states = append(states, "")
@@ -155,15 +156,15 @@ func ConvertFromMilliToTable(milli model2.Milli) [][]string {
 	return result
 }
 
-func convertStringToState(s string) model2.MilliState {
+func convertStringToState(s string) model.MilliState {
 	res := strings.Split(s, "/")
 
-	return model2.MilliState{
-		State:  util2.StringToInt(res[0]),
-		Signal: util2.StringToInt(res[1]),
+	return model.MilliState{
+		State:  util.StringToInt(res[0]),
+		Signal: util.StringToInt(res[1]),
 	}
 }
 
-func covertStateToString(state model2.MilliState) string {
+func covertStateToString(state model.MilliState) string {
 	return fmt.Sprintf("%s%d/%s%d", MilliOutStateChar, state.State, SignalChar, state.Signal)
 }

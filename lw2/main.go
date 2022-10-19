@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/lw1/util"
 	"os/lw2/mimization"
@@ -11,6 +12,10 @@ const minimizeMealyParam = "mealy"
 const minimizeMooreParam = "moore"
 
 func main() {
+	if len(os.Args) < 3 {
+		log.Fatal("invalid args count")
+	}
+
 	records := util.ReadCSV(os.Args[2])
 
 	var out [][]string
@@ -21,7 +26,7 @@ func main() {
 	case minimizeMooreParam:
 		out = minimizeMoore(records)
 	default:
-		panic("undefiend arg")
+		log.Fatal("undefined arg")
 	}
 
 	util.WriteCSV(os.Args[3], out)
@@ -35,5 +40,8 @@ func minimizeMealy(records [][]string) [][]string {
 }
 
 func minimizeMoore(records [][]string) [][]string {
-	return records
+	a := parse.TableToMoore(records)
+	a = mimization.Moore(a)
+
+	return parse.MooreToTable(a)
 }

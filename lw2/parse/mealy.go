@@ -4,8 +4,9 @@ import (
 	"os/lw2/model"
 )
 
-func MealyToTable(a model.Mealy) [][]string {
+const MealyMoveRowIndex = 1
 
+func MealyToTable(a model.Mealy) [][]string {
 	var result [][]string
 
 	var states []string
@@ -35,25 +36,7 @@ func TableToMealy(records [][]string) model.Mealy {
 		states = append(states, state)
 	}
 
-	moves := make([]string, 0, len(records)-1)
-	stateMoveToState := make(map[string]string)
-
-	for i, columns := range records {
-		if i == 0 {
-			continue
-		}
-
-		move := columns[0]
-		moves = append(moves, move)
-
-		for j, column := range columns {
-			if j == 0 {
-				continue
-			}
-
-			stateMoveToState[states[j-1]+move] = column
-		}
-	}
+	moves, stateMoveToState := getStateMoveToState(records, states, MealyMoveRowIndex)
 
 	return model.Mealy{
 		Moves:                  moves,

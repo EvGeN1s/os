@@ -11,14 +11,14 @@ type stateWithSignal struct {
 }
 
 func MealyToEqualityGroup(a model.Mealy) model.EqualityGroup {
-	removeUnreachableStates(&a)
-	stateToGroup, count := createStateToEqualityGroup(a)
+	removeUnreachableMealyStates(&a)
+	stateToGroup, count := createMealyStateToEqualityGroup(a)
 
 	return model.EqualityGroup{
 		Name:             model.DefaultGroupName,
 		Moves:            a.Moves,
 		States:           a.States,
-		StateMoveToGroup: createStateMoveToGroupMap(a, stateToGroup),
+		StateMoveToGroup: createMealyStateMoveToGroupMap(a, stateToGroup),
 		StateToGroup:     stateToGroup,
 		GroupsCount:      count,
 	}
@@ -29,7 +29,7 @@ func EqualityGroupToMealy(a model.Mealy, eg model.EqualityGroup) model.Mealy {
 	newStateMoveToState := make(map[string]string)
 	checkedGroups := make(map[string]bool)
 
-	for _, state := range a.States {
+	for _, state := range eg.States {
 		group := eg.StateToGroup[state]
 		if _, found := checkedGroups[group]; found {
 			continue
@@ -54,7 +54,7 @@ func EqualityGroupToMealy(a model.Mealy, eg model.EqualityGroup) model.Mealy {
 	}
 }
 
-func createStateToEqualityGroup(a model.Mealy) (map[string]string, int) {
+func createMealyStateToEqualityGroup(a model.Mealy) (map[string]string, int) {
 	stateToGroup := make(map[string]string)
 	signalsToGroup := make(map[string]string)
 	count := 0
@@ -77,7 +77,7 @@ func createStateToEqualityGroup(a model.Mealy) (map[string]string, int) {
 	return stateToGroup, count
 }
 
-func createStateMoveToGroupMap(a model.Mealy, stateToGroup map[string]string) map[string]string {
+func createMealyStateMoveToGroupMap(a model.Mealy, stateToGroup map[string]string) map[string]string {
 	stateMoveToGroup := make(map[string]string)
 
 	for _, state := range a.States {
@@ -95,7 +95,7 @@ func createStateMoveToGroupMap(a model.Mealy, stateToGroup map[string]string) ma
 	return stateMoveToGroup
 }
 
-func removeUnreachableStates(a *model.Mealy) {
+func removeUnreachableMealyStates(a *model.Mealy) {
 	reachedStates := make(map[string]bool)
 
 	for _, state := range a.States {

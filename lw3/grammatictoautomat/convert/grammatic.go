@@ -31,7 +31,11 @@ func GrammaticToAutomate(grammatic model.Grammatic) model.Automate {
 				if _, found := checkedStates[newState]; found {
 					continue
 				}
+
 				checkedStates[newState] = true
+				if newState == currState {
+					continue
+				}
 
 				queue.PushBack(newState)
 			}

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func RowsToRightGrammatic(rows []string) model.Grammatic {
+func RowsToLGrammatic(rows []string) model.Grammatic {
 	var states []string
 	checkedStates := make(map[string]bool)
 

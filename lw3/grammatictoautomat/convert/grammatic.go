@@ -6,7 +6,7 @@ import (
 	"os/lw3/grammatictoautomat/model"
 )
 
-func GrammaticToAutomate(grammatic model.Grammatic) model.Automate {
+func GrammaticToAutomate(grammatic model.Grammatic, numsCount int) model.Automate {
 	queue := list.New()
 
 	var resStates []string
@@ -26,7 +26,9 @@ func GrammaticToAutomate(grammatic model.Grammatic) model.Automate {
 
 			var newStates []string
 			stateMoveToState := make(map[string]string)
-			newStates, stateMoveToState, checkedPrevSates = getStates(currState, grammatic.StateMoveToStates, grammatic.Moves, checkedPrevSates)
+			newStates, stateMoveToState, checkedPrevSates = getStates(currState, grammatic.StateMoveToStates, grammatic.Moves, checkedPrevSates, numsCount)
+			fmt.Println(newStates)
+
 			for _, newState := range newStates {
 				if _, found := checkedStates[newState]; found {
 					continue
@@ -57,20 +59,45 @@ func GrammaticToAutomate(grammatic model.Grammatic) model.Automate {
 	}
 }
 
-func getStates(currState string, stateMoveToStates map[string][]string, moves []string, checkedPrevStates map[string]bool) ([]string, map[string]string, map[string]bool) {
+func getStates(currState string, stateMoveToStates map[string][]string, moves []string, checkedPrevStates map[string]bool, numsCount int) ([]string, map[string]string, map[string]bool) {
 	resStateMoveToStates := make(map[string]string)
 	var newStates []string
 	for _, move := range moves {
 		var newState string
-		for _, stateRune := range currState {
-			state := fmt.Sprintf("%c", stateRune)
+		checkedStates := make(map[string]bool)
+		var state string
+		for i, stateRune := range currState {
+			if i%numsCount == 0 && numsCount > 1 {
+				state = fmt.Sprintf("%c", stateRune)
+				continue
+			} else {
+				state = fmt.Sprintf("%s%c", state, stateRune)
+			}
 			if _, found := stateMoveToStates[state+move]; !found {
 				continue
 			}
 
 			for _, resState := range stateMoveToStates[state+move] {
-				checkedPrevStates[resState] = true
-				newState += resState
+				var outputState string
+				var state1 string
+				for j, stateRune1 := range resState {
+					if j%numsCount == 0 && numsCount > 1 {
+						state1 = fmt.Sprintf("%c", stateRune1)
+						continue
+					} else {
+						state1 = fmt.Sprintf("%s%c", state1, stateRune1)
+					}
+
+					if _, found := checkedStates[state1]; found {
+						continue
+					}
+
+					outputState += state1
+					checkedStates[state1] = true
+					checkedPrevStates[state1] = true
+				}
+
+				newState += outputState
 			}
 		}
 

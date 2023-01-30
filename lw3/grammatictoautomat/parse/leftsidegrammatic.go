@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func RowsToLeftGrammatic(rows []string) model.Grammatic {
+func RowsToRGrammatic(rows []string) model.Grammatic {
 	var states []string
 	checkedStates := make(map[string]bool)
 
@@ -19,8 +19,6 @@ func RowsToLeftGrammatic(rows []string) model.Grammatic {
 	for _, row := range rows {
 		r := regexp.MustCompile("\\s+")
 		row = r.ReplaceAllString(row, "")
-
-		fmt.Println(row)
 
 		stateWithStateMoves := strings.Split(row, "->")
 		state := stateWithStateMoves[0]
